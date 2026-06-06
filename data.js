@@ -1,66 +1,18 @@
 const data = [
     {
-    "id": 1780759177113,
-    "title": "Contoh",
+    "id": 1780765874079,
+    "title": "Contoh2",
     "language": "javascript",
     "desc": "By arulzxd",
-    "date": "6 Jun 2026",
-    "content": "Contoh"
-},
+    "date": "7 Jun 2026",
+    "content": "Contoh3"
+}, 
 {
-    "id": 1780759177114,
+    "id": 1780765861471,
     "title": "Contoh",
     "language": "javascript",
     "desc": "By arulzxd",
-    "date": "6 Jun 2026",
-    "content": "Contoh"
-},
-{
-    "id": 1780759177115,
-    "title": "Contoh",
-    "language": "javascript",
-    "desc": "By arulzxd",
-    "date": "6 Jun 2026",
-    "content": "Contoh"
-},
-{
-    "id": 1780759177116,
-    "title": "Contoh",
-    "language": "javascript",
-    "desc": "By arulzxd",
-    "date": "6 Jun 2026",
-    "content": "Contoh"
-},
-{
-    "id": 1780759177117,
-    "title": "Contoh",
-    "language": "javascript",
-    "desc": "By arulzxd",
-    "date": "6 Jun 2026",
-    "content": "Contoh"
-},
-{
-    "id": 1780759177118,
-    "title": "Contoh",
-    "language": "javascript",
-    "desc": "By arulzxd",
-    "date": "6 Jun 2026",
-    "content": "Contoh"
-},
-{
-    "id": 1780759177119,
-    "title": "Contoh",
-    "language": "javascript",
-    "desc": "By arulzxd",
-    "date": "6 Jun 2026",
-    "content": "Contoh"
-},
-{
-    "id": 1780759177120,
-    "title": "Contoh",
-    "language": "javascript",
-    "desc": "By arulzxd",
-    "date": "6 Jun 2026",
+    "date": "7 Jun 2026",
     "content": "Contoh"
 }
 ];
