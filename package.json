@@ -1,0 +1,21 @@
+{
+  "name": "arulz-xd-pastebin",
+  "version": "1.0.0",
+  "description": "Snippet & Pastebin Code Platform - Arulz-XD API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "pastebin",
+    "arulzxd",
+    "api",
+    "snippet"
+  ],
+  "author": "Idzharul Haqqi",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "fs-extra": "^11.3.5"
+  }
+}
