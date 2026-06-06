@@ -225,6 +225,51 @@
         .card-footer-info { display: flex; align-items: center; gap: 15px; color: #333; }
         .btn-raw { background: var(--yellow); color: #000; text-decoration: none; padding: 5px 12px; border: 3px solid #000; box-shadow: 2px 2px 0px #000; font-size: 11px; font-weight: 900; display: flex; align-items: center; gap: 4px; }
 
+        /* NEO-BRUTALISM PAGINATION */
+        .pagination-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin: 40px auto 20px auto;
+            flex-wrap: wrap;
+        }
+        .page-btn {
+            background: #ffffff;
+            color: #000000;
+            border: 3px solid #000000;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px #000000;
+            transition: transform 0.05s, box-shadow 0.05s;
+            font-family: inherit;
+        }
+        .page-btn:active:not(:disabled) {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #000000;
+        }
+        .page-btn.active {
+            background: #ffe359;
+            box-shadow: 3px 3px 0px #000000;
+        }
+        .page-btn:disabled {
+            background: #e8e7e1;
+            color: #a1a09b;
+            border-color: #a1a09b;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .page-dots-separator {
+            font-weight: 900;
+            font-size: 16px;
+            color: #000;
+            padding: 0 5px;
+        }
+
         /* MODALS UMUM */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 999; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         
@@ -409,7 +454,6 @@
             box-shadow: 1px 1px 0px #000000;
         }
 
-        /* MENGAKTIFKAN SCROLLING HALUS DENGAN LAYER AKSELERASI GPU */
         .code-window pre[class*="language-"] { 
             max-height: 550px !important; 
             overflow-y: auto !important; 
@@ -426,7 +470,6 @@
         body.raw-mode-active .navbar, body.raw-mode-active .sidebar, body.raw-mode-active .sidebar-overlay, body.raw-mode-active .footer, body.raw-mode-active .modal { display: none !important; }
         body.raw-mode-active .container { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
 
-        /* PERINGATAN KODE BESAR BANNER */
         .heavy-code-warning {
             background: #ffcbd1;
             border: 3px solid #000;
@@ -444,7 +487,7 @@
 <body>
 
 <div class="navbar">
-    <a href="/paste" class="logo"><span>AD</span> Arulz-XD API</a>
+    <a href="https://arulz-pastecode.vercel.app/pastecode" class="logo"><span>AD</span> Arulz-XD API</a>
     <div class="nav-right">
         <a href="https://simple-api-lagi.vercel.app/" target="_blank" class="nav-btn-docs" id="nav-docs-text">📖 DOCS</a>
         <button class="hamburger-btn" onclick="toggleSidebar()">
@@ -467,16 +510,16 @@
     </div>
     
     <ul class="sidebar-menu-list">
-        <li><a href="/paste" class="active" id="m-home">HOME</a></li>
+        <li><a href="https://arulz-pastecode.vercel.app/home" id="m-home">HOME</a></li>
         <li><a href="https://simple-api-lagi.vercel.app/" target="_blank" id="m-docs">DOKUMENTASI</a></li>
         <li><a href="https://arulz-uploader.vercel.app/" target="_blank" id="m-upload">FILE UPLOADER</a></li>
-        <li><a href="/paste" id="m-pastebin">PASTEBIN</a></li>
+        <li><a href="https://arulz-pastecode.vercel.app/pastecode" class="active" id="m-pastebin">PASTEBIN</a></li>
         
         <div class="sidebar-divider"></div>
         
         <li><a href="https://wa.me/6285122629940" target="_blank" id="m-bug">BUG REPORT</a></li>
         <li><a href="#" id="m-privacy">PRIVACY POLICY</a></li>
-        <li><a href="#" id="m-terms">TERMS OF SERVICE</a></li>
+        <li><a href="https://arulz-pastecode.vercel.app/support" id="m-terms">SUPPORT / DONASI</a></li>
     </ul>
 </div>
 
@@ -513,34 +556,38 @@
 </div>
 
 <script>
-    // 1. URL GITHUB RAW SUDAH DIPERBAIKI (MENGGUNAKAN FORMAT RAW YANG VALID)
     const GITHUB_RAW_URL = "https://raw.githubusercontent.com/arulzzzxd/Arul-pastecode/main/data.js";
 
     const translations = {
         id: {
             navDocs: "📖 DOCS", mHome: "HOME", mDocs: "DOKUMENTASI", mUpload: "FILE UPLOADER", mPastebin: "PASTEBIN",
-            mBug: "BUG REPORT", mPrivacy: "PRIVACY POLICY", mTerms: "TERMS OF SERVICE",
+            mBug: "BUG REPORT", mPrivacy: "PRIVACY POLICY", mTerms: "SUPPORT / DONASI",
             heroTitle: "<span>Snippet</span> & Kode", heroDesc: "Kumpulan kode, script, dan snippet dari tim Arulz-XD. Gratis, langsung pakai.",
             stat1: "Total Paste", stat2: "Bahasa", stat4: "Total Baris",
             searchPlaceholder: "Cari paste berdasarkan judul, bahasa, atau deskripsi...", filterAll: "Semua", sepText: "Semua Paste", noData: "Data tidak ditemukan.",
             lblFooterText: "Dibuat untuk Developer Indonesia", alertSuccessCopy: "Kode berhasil disalin!", 
             btnBack: "← KEMBALI KE PASTEBIN", lblLines: "baris", btnCopy: "🗎 SALIN KODE", 
-            btnRaw: "📄 RAW", btnShare: "🗀 SHARE", alertShare: "Link berhasil disalin ke clipboard!", btnDownload: "📥 DOWNLOAD"
+            btnRaw: "📄 RAW", btnShare: "🗀 SHARE", alertShare: "Link berhasil disalin ke clipboard!", btnDownload: "📥 DOWNLOAD",
+            btnPrev: "← Sebelumnya", btnNext: "Berikutnya →"
         },
         en: {
             navDocs: "📖 DOCS", mHome: "HOME", mDocs: "DOCUMENTATION", mUpload: "FILE UPLOADER", mPastebin: "PASTEBIN",
-            mBug: "BUG REPORT", mPrivacy: "PRIVACY POLICY", mTerms: "TERMS OF SERVICE",
+            mBug: "BUG REPORT", mPrivacy: "PRIVACY POLICY", mTerms: "SUPPORT / DONATION",
             heroTitle: "<span>Snippet</span> & Code", heroDesc: "Collection of codes, scripts, and snippets from the Arulz-XD team. Free, ready to use.",
             stat1: "Total Pastes", stat2: "Languages", stat4: "Total Lines",
             searchPlaceholder: "Search paste by title, language, or description...", filterAll: "All", sepText: "All Pastes", noData: "Data not found.",
             lblFooterText: "Created for Indonesian Developers", alertSuccessCopy: "Code successfully copied!", 
             btnBack: "← BACK TO PASTEBIN", lblLines: "lines", btnCopy: "🗎 COPY CODE", 
-            btnRaw: "📄 RAW", btnShare: "🗀 SHARE", alertShare: "Link copied to clipboard!", btnDownload: "📥 DOWNLOAD"
+            btnRaw: "📄 RAW", btnShare: "🗀 SHARE", alertShare: "Link copied to clipboard!", btnDownload: "📥 DOWNLOAD",
+            btnPrev: "← Previous", btnNext: "Next →"
         }
     };
 
     let currentLang = localStorage.getItem('arulzxd_lang') || 'id';
     let pastes = [];
+    
+    let currentPage = 1;
+    const itemsPerPage = 4; 
 
     const urlParams = new URLSearchParams(window.location.search);
     const viewId = urlParams.get('id');
@@ -556,14 +603,12 @@
         document.getElementById('alertModal').style.display = 'none';
     }
     
-    // FUNGSI LOAD DATA ANTI-CRASH MENGGUNAKAN PARSING REGEX LEBIH AMAN
     async function loadPastesFromServer() {
         try {
             const response = await fetch(GITHUB_RAW_URL);
             if (!response.ok) throw new Error(`HTTP status: ${response.status}`);
             const fileContent = await response.text();
             
-            // Membersihkan deklarasi penulisan variabel Javascript jenis apapun (window.data, const data, let data, dll)
             let jsonString = fileContent.replace(/^(let|const|var|window)\s+\w+\s*=\s*/, '').trim();
             if (jsonString.endsWith(';')) {
                 jsonString = jsonString.slice(0, -1);
@@ -581,7 +626,6 @@
             }
         }
 
-        // Fail-safe jika struktur data bermasalah agar web tidak stuck loading terus menerus
         if (!pastes || !Array.isArray(pastes)) {
             pastes = [];
         }
@@ -666,7 +710,6 @@
 
         const t = translations[currentLang];
 
-        // Tampilkan pesan informatif alternatif jika data memang kosong atau gagal dimuat total
         if (pastes.length === 0 && !viewId) {
             target.innerHTML = `<div style="text-align:center; padding:40px; border:4px dashed #000; background:#fff;">${t.noData} <br><small style="color:#777; margin-top:10px; display:block;">Silakan periksa kembali file data.js di repositori GitHub Anda.</small></div>`;
             return;
@@ -688,7 +731,7 @@
         if (viewId) {
             const idx = pastes.findIndex(p => p.id === viewId);
             if (idx === -1) {
-                target.innerHTML = `<h2>Data tidak ditemukan!</h2><a href="/paste" class="btn-back">Kembali</a>`;
+                target.innerHTML = `<h2>Data tidak ditemukan!</h2><a href="https://arulz-pastecode.vercel.app/pastecode" class="btn-back">Kembali</a>`;
                 return;
             }
             
@@ -697,7 +740,7 @@
             const isHeavyCode = lineCount > 3000 || (current.content && current.content.length > 150000);
 
             target.innerHTML = `
-                <a href="/paste" class="btn-back">${t.btnBack}</a>
+                <a href="https://arulz-pastecode.vercel.app/pastecode" class="btn-back">${t.btnBack}</a>
                 <div class="detail-header">
                     <div class="detail-header-top">
                         <div style="flex-grow: 1; padding-right: 20px;">
@@ -752,6 +795,9 @@
                 langs[p.language] = true;
             });
 
+            let totalLanguagesCount = Object.keys(langs).length;
+            if (totalLanguagesCount < 2) totalLanguagesCount = 2;
+
             target.innerHTML = `
                 <div class="hero-banner">
                     <div class="hero-tag">Arulz-XD Pastebin</div>
@@ -761,7 +807,7 @@
 
                 <div class="stats-grid">
                     <div class="stat-box left"><h2>${pastes.length}</h2><p>${t.stat1}</p></div>
-                    <div class="stat-box center"><h2>${Object.keys(langs).length || 0}</h2><p>${t.stat2}</p></div>
+                    <div class="stat-box center"><h2>${totalLanguagesCount}</h2><p>${t.stat2}</p></div>
                     <div class="stat-box"><h2>${totalLines.toLocaleString()}</h2><p>${t.stat4}</p></div>
                 </div>
 
@@ -779,9 +825,11 @@
                     <button class="btn-filter id-filter-plaintext" onclick="filterLanguage('plaintext')">Plaintext</button>
                 </div>
 
-                <div class="title-separator"><span>//</span> ${t.sepText} (<span id="total-paste-text">${pastes.length}</span> Paste)<div class="line"></div></div>
+                <div class="title-separator"><span>//</span> ${t.sepText} (<span id="total-paste-text">${pastes.length}</span> Paste) <div class="line"></div></div>
 
                 <div class="paste-grid" id="grid-list"></div>
+
+                <div class="pagination-container" id="pagination-wrapper"></div>
             `;
             applyFilterAndSearch();
         }
@@ -793,14 +841,22 @@
         grid.innerHTML = '';
         if(items.length === 0) {
             grid.innerHTML = `<div style="text-align:center; padding:40px; border:4px dashed #000; background:#fff;">${translations[currentLang].noData}</div>`;
+            document.getElementById('pagination-wrapper').innerHTML = '';
             return;
         }
         
+        const totalPages = Math.ceil(items.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages || 1;
+        
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedItems = items.slice(startIndex, endIndex);
+
         let htmlCards = '';
-        items.forEach(p => {
+        paginatedItems.forEach(p => {
             const contentPreview = p.content ? p.content.substring(0, 120) : '';
             htmlCards += `
-                <div class="paste-card" onclick="window.location.href='/paste?id=${p.id}'">
+                <div class="paste-card" onclick="window.location.href='https://arulz-pastecode.vercel.app/pastecode?id=${p.id}'">
                     <div class="card-top">
                         <div class="mac-dots"><div class="dot"></div><div class="dot y"></div><div class="dot g"></div></div>
                         <div class="lang-badge">${p.language}</div>
@@ -813,16 +869,74 @@
                         <div class="card-footer-info">
                             <span>📅 ${p.date}</span>
                         </div>
-                        <a href="/paste?id=${p.id}&raw=true" target="_blank" class="btn-raw" onclick="event.stopPropagation();">📄 RAW</a>
+                        <a href="https://arulz-pastecode.vercel.app/pastecode?id=${p.id}&raw=true" target="_blank" class="btn-raw" onclick="event.stopPropagation();">📄 RAW</a>
                     </div>
                 </div>
             `;
         });
         grid.innerHTML = htmlCards;
+
+        renderPaginationControls(totalPages, items);
+    }
+
+    function renderPaginationControls(totalPages, currentItems) {
+        const wrapper = document.getElementById('pagination-wrapper');
+        if (!wrapper) return;
+        wrapper.innerHTML = '';
+
+        const t = translations[currentLang];
+
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'page-btn';
+        prevBtn.innerText = t.btnPrev;
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderGridItems(currentItems);
+                window.scrollTo({ top: 400, behavior: 'smooth' });
+            }
+        };
+        wrapper.appendChild(prevBtn);
+
+        const maxPagesToShow = Math.min(totalPages, 5);
+
+        for (let i = 1; i <= maxPagesToShow; i++) {
+            if (maxPagesToShow === 5 && i === 5 && totalPages > 5) {
+                const dots = document.createElement('span');
+                dots.className = 'page-dots-separator';
+                dots.innerText = '...';
+                wrapper.appendChild(dots);
+            }
+
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `page-btn ${currentPage === i ? 'active' : ''}`;
+            pageBtn.innerText = i;
+            pageBtn.onclick = () => {
+                currentPage = i;
+                renderGridItems(currentItems);
+                window.scrollTo({ top: 400, behavior: 'smooth' });
+            };
+            wrapper.appendChild(pageBtn);
+        }
+
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'page-btn';
+        nextBtn.innerText = t.btnNext;
+        nextBtn.disabled = currentPage === totalPages || currentPage >= 5;
+        nextBtn.onclick = () => {
+            if (currentPage < totalPages && currentPage < 5) {
+                currentPage++;
+                renderGridItems(currentItems);
+                window.scrollTo({ top: 400, behavior: 'smooth' });
+            }
+        };
+        wrapper.appendChild(nextBtn);
     }
 
     function filterLanguage(lang) {
         currentFilter = lang;
+        currentPage = 1; 
         document.querySelectorAll('.filter-wrapper .btn-filter').forEach(b => b.classList.remove('active'));
         const activeBtn = document.querySelector(`.id-filter-${lang.toLowerCase()}`);
         if (activeBtn) {
@@ -832,20 +946,23 @@
     }
 
     function copyRawUrl() {
-        const rawUrl = window.location.origin + "/paste?id=" + viewId + "&raw=true";
+        const rawUrl = "https://arulz-pastecode.vercel.app/pastecode?id=" + viewId + "&raw=true";
         navigator.clipboard.writeText(rawUrl).then(() => {
             customAlert(translations[currentLang].alertShare);
         });
     }
 
     function sharePaste() {
-        const shareUrl = window.location.href;
+        const shareUrl = "https://arulz-pastecode.vercel.app/pastecode?id=" + viewId;
         navigator.clipboard.writeText(shareUrl).then(() => {
             customAlert(translations[currentLang].alertShare);
         });
     }
 
-    function handleSearch() { applyFilterAndSearch(); }
+    function handleSearch() { 
+        currentPage = 1; 
+        applyFilterAndSearch(); 
+    }
 
     function applyFilterAndSearch() {
         const searchBar = document.getElementById('search-bar');
