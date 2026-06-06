@@ -2,6 +2,6 @@
   "rewrites": [
     { "source": "/home", "destination": "/index.html" },
     { "source": "/pastecode", "destination": "/index.html" },
-    { "source": "/support", "destination": "/index.html" }
+    { "source": "/support", "destination": "/support.html" }
   ]
 }
