@@ -184,7 +184,7 @@
             </div>
         </div>
 
-        <button class="btn-action" onclick="downloadQR()">📥 Save QR ke Gallery</button>
+        <button class="btn-action" id="btn-download" onclick="downloadQR()">📥 Simpan QR ke galeri</button>
         <button class="btn-action orange-accent" onclick="shareLink()">🔗 Bagikan Link</button>
 
         <p class="footer-note">✨ Makasih banget, kontribusi lo bikin gw semangat ngembangin lebih banyak snippet & feature.</p>
@@ -192,21 +192,59 @@
 </div>
 
 <script>
-    function downloadQR() {
-        const qrImageUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg"; 
-        const element = document.createElement("a");
-        element.href = qrImageUrl;
-        element.download = "QRIS_Arulz_XD.jpg";
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
+    async function downloadQR() {
+        const btn = document.getElementById('btn-download');
+        const originalText = btn.innerText;
+        
+        try {
+            btn.innerText = "⏳ Mengunduh...";
+            btn.disabled = true;
+
+            const qrImageUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg"; 
+            
+            // Mengambil data gambar bypass batasan eksternal origin CORS lewat penanganan Blob
+            const response = await fetch(qrImageUrl);
+            if (!response.ok) throw new Error("Gagal mengunduh gambar server");
+            const blob = await response.blob();
+            
+            // Konversi blob menjadi lokal object URL yang siap dipaksa unduh langsung oleh browser
+            const localUrl = URL.createObjectURL(blob);
+            
+            const element = document.createElement("a");
+            element.href = localUrl;
+            element.download = "QRIS_Arulz_XD.jpg";
+            document.body.appendChild(element);
+            element.click();
+            
+            // Bersihkan sisa elemen dokumen dan memori penampung objek URL
+            document.body.removeChild(element);
+            URL.revokeObjectURL(localUrl);
+        } catch (error) {
+            console.error(error);
+            alert("Gagal mengunduh otomatis. Silakan tekan lama pada gambar QRIS lalu pilih 'Download Gambar'.");
+        } finally {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
     }
 
     function shareLink() {
-        const currentUrl = window.location.href;
-        navigator.clipboard.writeText(currentUrl).then(() => {
-            alert("Link donasi berhasil disalin ke clipboard!");
-        });
+        const shareData = {
+            title: 'Support — Arulz-XD API',
+            text: 'Suka sama project ini? Yuk dukung kelangsungan server & snippet barunya!',
+            url: window.location.href
+        };
+
+        // Memeriksa dukungan fitur Web Share API sistem Android seperti pada rancangan Gambar "Screenshot_20260607-105104.png"
+        if (navigator.share) {
+            navigator.share(shareData)
+                .catch((err) => console.log('Batal membagikan:', err));
+        } else {
+            // Skema cadangan jika dibuka dari browser desktop lama yang belum support system share widget
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert("Link donasi berhasil disalin ke clipboard!");
+            });
+        }
     }
 </script>
 
