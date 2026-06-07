@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arulz-XD API - Support & Donasi</title>
 
-    <!-- Meta Tags untuk Preview Share (WhatsApp, WA Business, FB, IG, dll) -->
     <meta property="og:title" content="Support & Donasi — Arulz-XD API">
     <meta property="og:description" content="Suka sama project ini? Yuk support seikhlasnya buat biaya perpanjangan hosting server + nambahin fitur & snippet baru.">
     <meta property="og:image" content="https://arulz-uploader.vercel.app/files/CVmlrD.jpg">
@@ -245,7 +244,6 @@
         <p class="desc">API & Pastebin ini gw bikin di sela-sela waktu luang. Kalau ngerasa kebantu, support seikhlasnya bantu banget buat biaya perpanjangan hosting server + nambahin fitur & snippet baru.</p>
         
         <div class="qr-wrapper">
-            <!-- URL diubah ke server proxy/via internal generator untuk menghindari CORS -->
             <img id="qris-img" src="https://arulz-uploader.vercel.app/files/CVmlrD.jpg" alt="QRIS Arulz-XD">
         </div>
 
@@ -272,7 +270,6 @@
     </div>
 </div>
 
-<!-- CONTAINER CUSTOM DIALOG BOX RETRO -->
 <div class="modal-overlay" id="custom-modal">
     <div class="modal-box">
         <h3 id="modal-title">Pemberitahuan</h3>
@@ -282,19 +279,18 @@
 </div>
 
 <script>
+    // Fungsi pemanggil Custom Alert Box (Fix classList)
     function showAlert(title, message) {
         document.getElementById('modal-title').innerText = title;
         document.getElementById('modal-message').innerText = message;
-        document.getElementById('custom-modal').add('active');
         document.getElementById('custom-modal').classList.add('active');
     }
 
-     Kak, fungsi ini buat menutup custom box alert
     function closeModal() {
         document.getElementById('custom-modal').classList.remove('active');
     }
 
-    // Menggunakan perantara Fetch modern + Object URL lokal agar 100% bebas error CORS Vercel
+    // Fungsi download QRIS anti-CORS dengan konversi otomatis ke Data URL / Base64
     async function downloadQR() {
         const btn = document.getElementById('btn-download');
         const originalText = btn.innerText;
@@ -305,12 +301,11 @@
         const targetUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg";
 
         try {
-            // Mengunduh resource gambar sebagai blob murni
             const response = await fetch(targetUrl);
-            if (!response.ok) throw new Error("HTTP error");
+            if (!response.ok) throw new Error("Gagal mengunduh gambar");
             const blob = await response.blob();
             
-            // Konversi ke blob lokal agar bisa diunduh langsung di storage HP
+            // Konversi file blob menjadi objek URL lokal browser
             const blobUrl = URL.createObjectURL(blob);
             
             const element = document.createElement("a");
@@ -325,16 +320,32 @@
             showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan ke galeri kamu.");
         } catch (error) {
             console.error(error);
-            // Backup Plan: Jika fetch gagal karena limit CORS dari provider, langsung arahkan ke tab download baru
+            
+            // Fallback Plan: Menggunakan sistem pemrosesan canvas lokal untuk mengubah paksa gambar menjadi Base64 string
             try {
-                const win = window.open(targetUrl, '_blank');
-                if(win) {
-                    showAlert("Buka Tab Baru 📥", "Gambar dibuka di halaman baru. Silakan tahan gambar dan pilih 'Download/Simpan Gambar'.");
-                } else {
-                    showAlert("Gagal Download", "Silakan ketuk lama langsung pada gambar QRIS utama di layar lalu pilih 'Download Gambar'.");
-                }
-            } catch(e) {
-                showAlert("Gagal Download", "Silakan ketuk lama langsung pada gambar QRIS utama di layar lalu pilih 'Download Gambar'.");
+                const img = document.getElementById('qris-img');
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth || img.width;
+                canvas.height = img.naturalHeight || img.height;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                
+                const base64Url = canvas.toDataURL("image/jpeg", 1.0);
+                
+                const element = document.createElement("a");
+                element.href = base64Url;
+                element.download = "QRIS_Idzharul_Store.jpg";
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+
+                showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan lewat penampung lokal.");
+            } catch (canvasErr) {
+                console.error(canvasErr);
+                // Jika semua metode otomatis diblokir browser, buka di tab baru agar user bisa save-manual dengan mudah
+                window.open(targetUrl, '_blank');
+                showAlert("Simpan Manual 📥", "Gambar telah dibuka di tab baru. Silakan ketuk lama gambar lalu pilih 'Download Gambar'.");
             }
         } finally {
             btn.innerText = originalText;
@@ -342,6 +353,7 @@
         }
     }
 
+    // Fungsi Share Link ke semua aplikasi (Mendukung WA, WA Business, IG, dll)
     function shareLink() {
         const shareData = {
             title: 'Support — Arulz-XD API',
@@ -353,6 +365,7 @@
             navigator.share(shareData)
                 .catch((err) => console.log('Batal membagikan:', err));
         } else {
+            // Backup plan jika dibuka dari PC / browser desktop lama
             navigator.clipboard.writeText(window.location.href).then(() => {
                 showAlert("Disalin 🔗", "Link donasi berhasil disalin ke clipboard! Silakan share secara manual.");
             });
