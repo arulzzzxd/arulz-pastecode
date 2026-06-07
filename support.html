@@ -292,39 +292,50 @@
     // Fungsi download otomatis langsung memicu unduhan lokal biner tanpa buka tab baru
     async function downloadQR() {
     const btn = document.getElementById('btn-download');
-    const originalText = btn.innerText;
+    // Simpan isi HTML awal tombol (termasuk icon-nya)
+    const originalText = btn.innerHTML; 
     
-    btn.innerText = "⏳ MENGUNDUH...";
+    btn.innerHTML = "⏳ MENGUNDUH...";
     btn.disabled = true;
 
     const imageUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg";
-    // Menggunakan corsproxy publik untuk mem-bypass blokir browser
-    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(imageUrl);
+    // Gunakan proxy allorigins yang stabil untuk bypass CORS browser
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`;
 
     try {
+        // Ambil gambar via proxy
         const response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error("Gagal mengambil gambar");
+        if (!response.ok) throw new Error("Gagal fetch gambar dari server");
         
+        // Ubah gambar jadi objek biner
         const blob = await response.blob();
-        const blobUrl = URL.createObjectURL(blob);
+        const url = window.URL.createObjectURL(blob);
 
-        const downloadLink = document.createElement("a");
-        downloadLink.href = blobUrl;
-        downloadLink.download = "QRIS_Idzharul_Store.jpg";
+        // Buat elemen <a> fiktif untuk trigger download
+        const a = document.createElement("a");
+        a.style.display = "none";
+        a.href = url;
+        a.download = "QRIS_Idzharul_Store.jpg";
         
-        // Append, klik, dan hapus dari DOM
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
+        // Append ke body (wajib untuk browser HP) lalu klik
+        document.body.appendChild(a);
+        a.click();
         
-        URL.revokeObjectURL(blobUrl);
+        // Kasih jeda sedikit sebelum dihapus agar proses unduh di HP tidak terpotong
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 200);
 
-        showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan langsung ke galeri kamu.");
+        // Tampilkan modal sukses
+        showAlert("Berhasil 🎉", "Gambar QRIS sedang diunduh ke galeri kamu.");
     } catch (error) {
-        console.error("Download error:", error);
-        showAlert("Simpan QRIS 📥", "Gagal mengunduh otomatis. Gunakan ketuk lama pada gambar QRIS lalu pilih 'Simpan ke Galeri'.");
+        console.error("Download Error:", error);
+        // Fallback kalau proxy / koneksi bermasalah
+        showAlert("SIMPAN QRIS 📥", "Gagal mengunduh otomatis. Gunakan ketuk lama pada gambar QRIS lalu pilih 'Simpan ke Galeri'.");
     } finally {
-        btn.innerText = originalText;
+        // Kembalikan tombol ke semula
+        btn.innerHTML = originalText;
         btn.disabled = false;
     }
 }
