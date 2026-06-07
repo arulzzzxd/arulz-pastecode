@@ -158,6 +158,78 @@
             margin-top: 25px;
             font-style: italic;
         }
+
+        /* --- STYLING CUSTOM ALERT MODAL BOX RETRO --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-in-out;
+            z-index: 9999;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: #fff;
+            border: 4px solid #000;
+            box-shadow: 8px 8px 0px #000;
+            max-width: 400px;
+            width: 100%;
+            padding: 25px;
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-box h3 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+            text-transform: uppercase;
+            color: #000;
+        }
+
+        .modal-box p {
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+            margin: 0 0 20px 0;
+        }
+
+        .btn-modal-close {
+            background: var(--yellow);
+            color: #000;
+            border: 3px solid #000;
+            box-shadow: 3px 3px 0px #000;
+            padding: 10px 24px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .btn-modal-close:active {
+            transform: translate(1px, 1px);
+            box-shadow: 2px 2px 0px #000;
+        }
     </style>
 </head>
 <body>
@@ -173,7 +245,8 @@
         <p class="desc">API & Pastebin ini gw bikin di sela-sela waktu luang. Kalau ngerasa kebantu, support seikhlasnya bantu banget buat biaya perpanjangan hosting server + nambahin fitur & snippet baru.</p>
         
         <div class="qr-wrapper">
-            <img src="https://arulz-uploader.vercel.app/files/CVmlrD.jpg" alt="QRIS Arulz-XD">
+            <!-- ID ditambahkan di sini agar dibaca oleh skrip Canvas -->
+            <img id="qris-img" src="https://arulz-uploader.vercel.app/files/CVmlrD.jpg" alt="QRIS Arulz-XD" crossorigin="anonymous">
         </div>
 
         <div class="payment-info-box">
@@ -199,58 +272,91 @@
     </div>
 </div>
 
+<!-- CONTAINER CUSTOM DIALOG BOX -->
+<div class="modal-overlay" id="custom-modal">
+    <div class="modal-box">
+        <h3 id="modal-title">Pemberitahuan</h3>
+        <p id="modal-message">Isi pesan di sini...</p>
+        <button class="btn-modal-close" onclick="closeModal()">Oke</button>
+    </div>
+</div>
+
 <script>
-    async function downloadQR() {
+    // Fungsi pemanggil Box Alert Keren
+    function showAlert(title, message) {
+        document.getElementById('modal-title').innerText = title;
+        document.getElementById('modal-message').innerText = message;
+        document.getElementById('custom-modal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('custom-modal').classList.remove('active');
+    }
+
+    function downloadQR() {
         const btn = document.getElementById('btn-download');
         const originalText = btn.innerText;
         
-        try {
-            btn.innerText = "⏳ Mengunduh...";
-            btn.disabled = true;
+        btn.innerText = "⏳ MENGUNDUH...";
+        btn.disabled = true;
 
-            const qrImageUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg"; 
+        const imgElement = document.getElementById('qris-img');
+        
+        // Membuat canvas virtual untuk memproses ulang gambar secara lokal (Bypass CORS)
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        const downloadImg = new Image();
+        downloadImg.crossOrigin = "anonymous"; 
+        downloadImg.src = imgElement.src;
+
+        downloadImg.onload = function() {
+            canvas.width = downloadImg.naturalWidth;
+            canvas.height = downloadImg.naturalHeight;
+            ctx.drawImage(downloadImg, 0, 0);
             
-            // Bypass CORS Vercel dengan konversi data ke format Blob internal
-            const response = await fetch(qrImageUrl);
-            if (!response.ok) throw new Error("Gagal mengambil data dari server gambar");
-            const blob = await response.blob();
-            
-            // Generate link lokal otomatis agar file langsung terunduh ke galeri
-            const localUrl = URL.createObjectURL(blob);
-            
-            const element = document.createElement("a");
-            element.href = localUrl;
-            element.download = "QRIS_Arulz_XD.jpg";
-            document.body.appendChild(element);
-            element.click();
-            
-            // Hapus dan bersihkan cache localUrl dari memori browser
-            document.body.removeChild(element);
-            URL.revokeObjectURL(localUrl);
-        } catch (error) {
-            console.error(error);
-            alert("Gagal mendownload otomatis. Silakan tekan lama pada gambar QRIS, lalu pilih 'Download Gambar'.");
-        } finally {
+            try {
+                // Mengubah hasil render canvas menjadi data URL lokal berformat JPEG kualitas penuh
+                const localDataUrl = canvas.toDataURL("image/jpeg", 1.0);
+                
+                const element = document.createElement("a");
+                element.href = localDataUrl;
+                element.download = "QRIS_Idzharul_Store.jpg";
+                document.body.appendChild(element);
+                element.click();
+                document.body.removeChild(element);
+                
+                // Tampilkan sukses box jika berhasil
+                showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan ke galeri kamu.");
+            } catch (error) {
+                console.error(error);
+                showAlert("Gagal Download", "Sistem gagal mengunduh otomatis. Silakan tekan lama pada gambar QRIS, lalu pilih 'Download Gambar'.");
+            } {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        downloadImg.onerror = function() {
+            showAlert("Error ❌", "Gagal memuat gambar dari server. Silakan coba simpan manual dengan tekan lama gambar QRIS.");
             btn.innerText = originalText;
             btn.disabled = false;
-        }
+        };
     }
 
     function shareLink() {
         const shareData = {
             title: 'Support — Arulz-XD API',
             text: 'Suka sama project ini? Yuk dukung kelangsungan server & snippet barunya! 👇\n',
-            url: window.location.href // Otomatis mengirim URL halaman support aktif lo saat ini
+            url: window.location.href
         };
 
-        // Memanggil fitur share dialog bawaan OS HP (Mendukung WA, WA Business, FB, IG, TikTok, dll)
         if (navigator.share) {
             navigator.share(shareData)
                 .catch((err) => console.log('Batal membagikan:', err));
         } else {
-            // Cadangan jika dibuka lewat browser PC / Laptop yang tidak mendukung share dialog native
             navigator.clipboard.writeText(window.location.href).then(() => {
-                alert("Link donasi berhasil disalin ke clipboard! Silakan share secara manual.");
+                showAlert("Disalin 🔗", "Link donasi berhasil disalin ke clipboard! Silakan share secara manual.");
             });
         }
     }
