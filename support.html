@@ -279,25 +279,19 @@
 </div>
 
 <script>
-    // String Base64 dari QRIS Gambar lo (Supaya 100% aman dari blokir CORS browser HP)
-    const qrisBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAEAAHgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElUVPvFUXXz2fKGOzhCRUpfWV5Wl5iZqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4Tl5ufo6erx8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9IKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==";
-
-    // Pasang Base64 ke elemen gambar secara otomatis saat halaman dimuat
-    document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById('qris-img').src = qrisBase64;
-    });
-
+    // Fungsi pemanggil Custom Box Alert
     function showAlert(title, message) {
         document.getElementById('modal-title').innerText = title;
         document.getElementById('modal-message').innerText = message;
         document.getElementById('custom-modal').classList.add('active');
     }
 
+    // Fungsi penutup custom box alert
     function closeModal() {
         document.getElementById('custom-modal').classList.remove('active');
     }
 
-    // Fungsi download instan otomatis tanpa dialihkan ke tab baru
+    // Fungsi download otomatis langsung terunduh lewat render canvas lokal
     function downloadQR() {
         const btn = document.getElementById('btn-download');
         const originalText = btn.innerText;
@@ -305,25 +299,58 @@
         btn.innerText = "⏳ MENGUNDUH...";
         btn.disabled = true;
 
-        try {
-            // Langsung memicu aksi download lokal menggunakan data string Base64 murni
-            const element = document.createElement("a");
-            element.href = qrisBase64;
-            element.download = "QRIS_Idzharul_Store.jpg";
-            document.body.appendChild(element);
-            element.click();
-            document.body.removeChild(element);
+        const imgElement = document.getElementById('qris-img');
+        
+        // Membuat virtual canvas eksekusi lokal
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Buat instance image baru khusus pemrosesan data unduhan lokal
+        const processImg = new Image();
+        processImg.src = imgElement.src;
 
-            showAlert("Berhasil 🎉", "Gambar QRIS berhasil diunduh langsung ke galeri kamu.");
-        } catch (error) {
-            console.error(error);
-            showAlert("Gagal Download ❌", "Terjadi kesalahan saat mengunduh. Silakan ketuk lama gambar QRIS lalu pilih 'Download Gambar'.");
-        } finally {
+        processImg.onload = function() {
+            try {
+                canvas.width = processImg.naturalWidth || processImg.width;
+                canvas.height = processImg.naturalHeight || processImg.height;
+                ctx.drawImage(processImg, 0, 0);
+                
+                // Konversi hasil render canvas lokal langsung menjadi trigger download browser
+                const localDataUrl = canvas.toDataURL("image/jpeg", 1.0);
+                
+                const downloadLink = document.createElement("a");
+                downloadLink.href = localDataUrl;
+                downloadLink.download = "QRIS_Idzharul_Store.jpg";
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                
+                showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan langsung ke galeri kamu.");
+            } catch (err) {
+                console.error(err);
+                // Jika canvas diblokir karena asal domain image, lempar langsung ke link download mentah Vercel
+                const fallbackLink = document.createElement("a");
+                fallbackLink.href = imgElement.src;
+                fallbackLink.download = "QRIS_Idzharul_Store.jpg";
+                document.body.appendChild(fallbackLink);
+                fallbackLink.click();
+                document.body.removeChild(fallbackLink);
+                
+                showAlert("Berhasil 🎉", "Gambar QRIS berhasil diunduh.");
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        };
+
+        processImg.onerror = function() {
+            showAlert("Error ❌", "Gagal memproses file gambar dari server hosting. Silakan gunakan simpan manual dengan tekan lama gambar.");
             btn.innerText = originalText;
             btn.disabled = false;
-        }
+        };
     }
 
+    // Fungsi share link ke semua aplikasi media sosial terinstall di HP
     function shareLink() {
         const shareData = {
             title: 'Support — Arulz-XD API',
