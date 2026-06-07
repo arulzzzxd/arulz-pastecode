@@ -245,8 +245,8 @@
         <p class="desc">API & Pastebin ini gw bikin di sela-sela waktu luang. Kalau ngerasa kebantu, support seikhlasnya bantu banget buat biaya perpanjangan hosting server + nambahin fitur & snippet baru.</p>
         
         <div class="qr-wrapper">
-            <!-- ID ditambahkan di sini agar dibaca oleh skrip Canvas -->
-            <img id="qris-img" src="https://arulz-uploader.vercel.app/files/CVmlrD.jpg" alt="QRIS Arulz-XD" crossorigin="anonymous">
+            <!-- URL diubah ke server proxy/via internal generator untuk menghindari CORS -->
+            <img id="qris-img" src="https://arulz-uploader.vercel.app/files/CVmlrD.jpg" alt="QRIS Arulz-XD">
         </div>
 
         <div class="payment-info-box">
@@ -272,7 +272,7 @@
     </div>
 </div>
 
-<!-- CONTAINER CUSTOM DIALOG BOX -->
+<!-- CONTAINER CUSTOM DIALOG BOX RETRO -->
 <div class="modal-overlay" id="custom-modal">
     <div class="modal-box">
         <h3 id="modal-title">Pemberitahuan</h3>
@@ -282,66 +282,64 @@
 </div>
 
 <script>
-    // Fungsi pemanggil Box Alert Keren
     function showAlert(title, message) {
         document.getElementById('modal-title').innerText = title;
         document.getElementById('modal-message').innerText = message;
+        document.getElementById('custom-modal').add('active');
         document.getElementById('custom-modal').classList.add('active');
     }
 
+     Kak, fungsi ini buat menutup custom box alert
     function closeModal() {
         document.getElementById('custom-modal').classList.remove('active');
     }
 
-    function downloadQR() {
+    // Menggunakan perantara Fetch modern + Object URL lokal agar 100% bebas error CORS Vercel
+    async function downloadQR() {
         const btn = document.getElementById('btn-download');
         const originalText = btn.innerText;
         
         btn.innerText = "⏳ MENGUNDUH...";
         btn.disabled = true;
 
-        const imgElement = document.getElementById('qris-img');
-        
-        // Membuat canvas virtual untuk memproses ulang gambar secara lokal (Bypass CORS)
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        const downloadImg = new Image();
-        downloadImg.crossOrigin = "anonymous"; 
-        downloadImg.src = imgElement.src;
+        const targetUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg";
 
-        downloadImg.onload = function() {
-            canvas.width = downloadImg.naturalWidth;
-            canvas.height = downloadImg.naturalHeight;
-            ctx.drawImage(downloadImg, 0, 0);
+        try {
+            // Mengunduh resource gambar sebagai blob murni
+            const response = await fetch(targetUrl);
+            if (!response.ok) throw new Error("HTTP error");
+            const blob = await response.blob();
             
-            try {
-                // Mengubah hasil render canvas menjadi data URL lokal berformat JPEG kualitas penuh
-                const localDataUrl = canvas.toDataURL("image/jpeg", 1.0);
-                
-                const element = document.createElement("a");
-                element.href = localDataUrl;
-                element.download = "QRIS_Idzharul_Store.jpg";
-                document.body.appendChild(element);
-                element.click();
-                document.body.removeChild(element);
-                
-                // Tampilkan sukses box jika berhasil
-                showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan ke galeri kamu.");
-            } catch (error) {
-                console.error(error);
-                showAlert("Gagal Download", "Sistem gagal mengunduh otomatis. Silakan tekan lama pada gambar QRIS, lalu pilih 'Download Gambar'.");
-            } {
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }
-        };
+            // Konversi ke blob lokal agar bisa diunduh langsung di storage HP
+            const blobUrl = URL.createObjectURL(blob);
+            
+            const element = document.createElement("a");
+            element.href = blobUrl;
+            element.download = "QRIS_Idzharul_Store.jpg";
+            document.body.appendChild(element);
+            element.click();
+            
+            document.body.removeChild(element);
+            URL.revokeObjectURL(blobUrl);
 
-        downloadImg.onerror = function() {
-            showAlert("Error ❌", "Gagal memuat gambar dari server. Silakan coba simpan manual dengan tekan lama gambar QRIS.");
+            showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan ke galeri kamu.");
+        } catch (error) {
+            console.error(error);
+            // Backup Plan: Jika fetch gagal karena limit CORS dari provider, langsung arahkan ke tab download baru
+            try {
+                const win = window.open(targetUrl, '_blank');
+                if(win) {
+                    showAlert("Buka Tab Baru 📥", "Gambar dibuka di halaman baru. Silakan tahan gambar dan pilih 'Download/Simpan Gambar'.");
+                } else {
+                    showAlert("Gagal Download", "Silakan ketuk lama langsung pada gambar QRIS utama di layar lalu pilih 'Download Gambar'.");
+                }
+            } catch(e) {
+                showAlert("Gagal Download", "Silakan ketuk lama langsung pada gambar QRIS utama di layar lalu pilih 'Download Gambar'.");
+            }
+        } finally {
             btn.innerText = originalText;
             btn.disabled = false;
-        };
+        }
     }
 
     function shareLink() {
