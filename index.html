@@ -23,11 +23,9 @@
             margin: 0; 
             padding: 0; 
             font-weight: bold; 
-            /* Tambahan agar konten tidak tertutup navbar yang melayang */
             padding-top: 75px; 
         }
         
-        /* NAVBAR FIX: Tetap diam saat di-scroll */
         .navbar { 
             background: #0b0c10; 
             color: white; 
@@ -46,7 +44,6 @@
         .logo { font-size: 18px; font-weight: 900; text-decoration: none; color: white; display: flex; align-items: center; }
         .logo span { background: var(--yellow); color: #000; padding: 4px 8px; margin-right: 10px; border: 3px solid #000; font-size: 14px; font-weight: 900; }
         
-        /* NAV RIGHT */
         .nav-right { display: flex; align-items: center; gap: 12px; }
         .nav-btn-docs { 
             background: var(--yellow); 
@@ -64,7 +61,6 @@
         }
         .nav-btn-docs:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px #000; }
         
-        /* HAMBURGER BUTTON */
         .hamburger-btn {
             background: #22252a;
             border: 3px solid #000;
@@ -79,7 +75,6 @@
         }
         .hamburger-btn .bar { width: 18px; height: 3px; background-color: white; transition: 0.3s; }
 
-        /* SIDEBAR DRAWER MENU */
         .sidebar {
             position: fixed;
             top: 0;
@@ -104,7 +99,6 @@
             margin-bottom: 25px;
         }
         
-        /* LANGUAGE SWITCHER */
         .lang-switcher {
             display: flex;
             border: 2px solid #555;
@@ -155,11 +149,9 @@
             display: block;
             transition: color 0.2s;
         }
-        /* Highlight menu aktif dengan warna putih terang */
         .sidebar-menu-list li a:hover, .sidebar-menu-list li a.active { color: #ffffff !important; font-weight: 900; }
         .sidebar-divider { height: 2px; background: #22252a; margin: 15px 0; }
 
-        /* OVERLAY BACKGROUND */
         .sidebar-overlay {
             position: fixed;
             top: 0;
@@ -171,10 +163,8 @@
             display: none;
         }
 
-        /* CONTAINER UTAMA */
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; box-sizing: border-box; min-height: 400px; }
 
-        /* BANNER HERO BERANDA */
         .hero-banner { background: #fff; border: 4px solid #000; box-shadow: 8px 8px 0px #000; padding: 35px; margin-bottom: 35px; position: relative; }
         .hero-tag { background: var(--yellow); border: 3px solid #000; display: inline-block; padding: 4px 12px; font-size: 12px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
         .hero-tag::before { content: "● "; color: #555; }
@@ -182,7 +172,6 @@
         .hero-banner h1 span { background: var(--yellow); padding: 2px 8px; border: 3px solid #000; margin-right: 5px; }
         .hero-banner p { margin: 0 0 10px 0; color: #444; font-size: 14px; font-weight: bold; line-height: 1.6; max-width: 700px; }
 
-        /* STATS GRID */
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 4px solid #000; background: #fff; box-shadow: 8px 8px 0px #000; margin-bottom: 35px; }
         .stat-box { padding: 25px; background: white; box-sizing: border-box; }
         .stat-box.left { border-right: 4px solid #000; background: var(--yellow); }
@@ -190,22 +179,18 @@
         .stat-box h2 { margin: 0 0 5px 0; font-size: 38px; font-weight: 900; color: #000; font-family: Arial, sans-serif; }
         .stat-box p { margin: 0; font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 900; }
 
-        /* SEARCH INPUT */
         .search-wrapper { position: relative; margin-bottom: 15px; }
         .search-input { width: 100%; padding: 16px 16px 16px 45px; font-size: 14px; border: 4px solid #000; box-shadow: 4px 4px 0px #000; box-sizing: border-box; background: #fff; font-weight: bold; font-family: inherit; }
         .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #666; pointer-events: none; }
 
-        /* FILTER BUTTONS */
         .filter-wrapper { display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
         .btn-filter { background: #fff; border: 3px solid #000; box-shadow: 3px 3px 0px #000; padding: 8px 16px; font-size: 12px; font-weight: 900; text-transform: uppercase; cursor: pointer; font-family: inherit; }
         .btn-filter.active { background: var(--yellow); }
 
-        /* SEPARATOR LINE */
         .title-separator { display: flex; align-items: center; margin-bottom: 30px; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
         .title-separator span { color: var(--orange); margin-right: 15px; font-size: 14px; }
         .title-separator .line { flex-grow: 1; height: 3px; background: #000; margin-left: 20px; }
 
-        /* GRID PASTE CARDS */
         .paste-grid { display: grid; grid-template-columns: 1fr; gap: 25px; margin-bottom: 40px; }
         .paste-card { 
             background: #fff; 
@@ -232,7 +217,6 @@
         .card-footer-info { display: flex; align-items: center; gap: 15px; color: #333; }
         .btn-raw { background: var(--yellow); color: #000; text-decoration: none; padding: 5px 12px; border: 3px solid #000; box-shadow: 2px 2px 0px #000; font-size: 11px; font-weight: 900; display: flex; align-items: center; gap: 4px; }
 
-        /* NEO-BRUTALISM PAGINATION */
         .pagination-container {
             display: flex;
             justify-content: center;
@@ -277,15 +261,12 @@
             padding: 0 5px;
         }
 
-        /* MODALS UMUM */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1001; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         
-        /* DETAIL PAGE */
         .btn-back { display: inline-block; background: #fff; border: 3px solid #000; box-shadow: 3px 3px 0px #000; padding: 10px 18px; text-decoration: none; color: #000; margin-bottom: 25px; font-size: 12px; font-weight: 900; }
         .detail-header { background: #fff; border: 4px solid #000; box-shadow: 6px 6px 0px #000; padding: 25px; margin-bottom: 25px; position: relative; }
         .detail-header-top { display: flex; justify-content: space-between; align-items: flex-start; }
         
-        /* CODE WINDOW CONTAINER & DETAIL */
         .code-window { background: #0b0c10; border: 4px solid #000; box-shadow: 8px 8px 0px #000; margin-bottom: 30px; overflow: hidden; contain: content; }
         .window-top { 
             background: #f5f4ef; 
@@ -300,7 +281,6 @@
             gap: 12px;
         }
 
-        /* STRUKTUR MENU UTAMA DETAIL */
         .action-menubar { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
@@ -318,7 +298,6 @@
             margin-top: 10px;
         }
 
-        /* STYLE DASAR TOMBOL NEO-BRUTALISM */
         .btn-brutalism {
             background: #fff;
             color: #000;
@@ -346,7 +325,6 @@
         .btn-brutalism.black-accent { background: #000; color: #fff; }
         .btn-brutalism.black-accent:hover { color: #fff; }
 
-        /* MODAL RAW BERWARNA */
         .raw-modal-content {
             background: #f5f4ef;
             border: 4px solid #000000;
@@ -403,7 +381,6 @@
             border-top: 4px solid #000000;
         }
 
-        /* ALERT MODAL BERWARNA */
         .alert-modal-content {
             background: #ffffff;
             color: #000000;
@@ -494,7 +471,7 @@
 <body>
 
 <div class="navbar">
-    <a href="https://arulz-pastecode.vercel.app/pastecode" class="logo"><span>AD</span> Arulz-XD API</a>
+    <a href="/home" class="logo"><span>AD</span> Arulz-XD API</a>
     <div class="nav-right">
         <a href="https://simple-api-lagi.vercel.app/" target="_blank" class="nav-btn-docs" id="nav-docs-text">📖 DOCS</a>
         <button class="hamburger-btn" onclick="toggleSidebar()">
@@ -517,16 +494,16 @@
     </div>
     
     <ul class="sidebar-menu-list">
-        <li><a href="https://arulz-pastecode.vercel.app/home" id="m-home">HOME</a></li>
+        <li><a href="/home" id="m-home">HOME</a></li>
         <li><a href="https://simple-api-lagi.vercel.app/" target="_blank" id="m-docs">DOKUMENTASI</a></li>
         <li><a href="https://arulz-uploader.vercel.app/" target="_blank" id="m-upload">FILE UPLOADER</a></li>
-        <li><a href="https://arulz-pastecode.vercel.app/pastecode" id="m-pastebin" onclick="setScrollMarker()">PASTEBIN</a></li>
+        <li><a href="/pastecode" id="m-pastebin" onclick="setScrollMarker()">PASTEBIN</a></li>
         
         <div class="sidebar-divider"></div>
         
         <li><a href="https://wa.me/6285122629940" target="_blank" id="m-bug">BUG REPORT</a></li>
-        <li><a href="#" id="m-privacy">PRIVACY POLICY</a></li>
-        <li><a href="https://arulz-pastecode.vercel.app/support" id="m-terms">SUPPORT / DONASI</a></li>
+        <li><a href="/privacy" id="m-privacy">PRIVACY POLICY</a></li>
+        <li><a href="/support" id="m-support">SUPPORT / DONASI</a></li>
     </ul>
 </div>
 
@@ -601,22 +578,25 @@
     const isRawMode = urlParams.get('raw') === 'true'; 
     let currentFilter = 'ALL';
 
-    // FUNGSI MANAJEMEN MENU AKTIF BERDASARKAN URL SEKARANG
     function handleActiveMenuHighlight() {
-        const currentUrl = window.location.href;
+        const currentUrl = window.location.pathname;
         
-        // Hapus kelas active dari semua elemen menu terlebih dahulu
         document.querySelectorAll('.sidebar-menu-list li a').forEach(el => {
             el.classList.remove('active');
         });
 
-        // Seleksi elemen spesifik berdasarkan kecocokan URL halaman
-        if (currentUrl.includes('/home')) {
-            document.getElementById('m-home').classList.add('active');
+        if (currentUrl === '/home' || currentUrl === '/' || currentUrl.includes('index.html')) {
+            const homeMenu = document.getElementById('m-home');
+            if(homeMenu) homeMenu.classList.add('active');
         } else if (currentUrl.includes('/support')) {
-            document.getElementById('m-terms').classList.add('active');
+            const supportMenu = document.getElementById('m-support');
+            if(supportMenu) supportMenu.classList.add('active');
         } else if (currentUrl.includes('/pastecode')) {
-            document.getElementById('m-pastebin').classList.add('active');
+            const pasteMenu = document.getElementById('m-pastebin');
+            if(pasteMenu) pasteMenu.classList.add('active');
+        } else if (currentUrl.includes('/privacy')) {
+            const privacyMenu = document.getElementById('m-privacy');
+            if(privacyMenu) privacyMenu.classList.add('active');
         }
     }
 
@@ -629,54 +609,51 @@
         document.getElementById('alertModal').style.display = 'none';
     }
     
-    // Fungsi untuk menandai bahwa user mengklik menu PASTEBIN dari sidebar
-function setScrollMarker() {
-    sessionStorage.setItem('triggerScrollToPastes', 'true');
-}
-
-async function loadPastesFromServer() {
-    try {
-        const response = await fetch(GITHUB_RAW_URL);
-        if (!response.ok) throw new Error(`HTTP status: ${response.status}`);
-        const fileContent = await response.text();
-        
-        let jsonString = fileContent.replace(/^(let|const|var|window)\s+\w+\s*=\s*/, '').trim();
-        if (jsonString.endsWith(';')) {
-            jsonString = jsonString.slice(0, -1);
-        }
-        
-        pastes = JSON.parse(jsonString);
-        localStorage.setItem('arulzxd_pastes', JSON.stringify(pastes));
-    } catch (err) {
-        console.error("Gagal memuat GitHub Raw, beralih ke local storage...", err);
-        const rawLocal = localStorage.getItem('arulzxd_pastes');
-        try { 
-            pastes = rawLocal ? JSON.parse(rawLocal) : []; 
-        } catch(e) { 
-            pastes = []; 
-        }
+    function setScrollMarker() {
+        sessionStorage.setItem('triggerScrollToPastes', 'true');
     }
 
-    if (!pastes || !Array.isArray(pastes)) {
-        pastes = [];
-    }
-
-    renderPage();
-    
-    // LOGIKA AUTO-SCROLL MENGGUNAKAN SESSION STORAGE (TANPA QUERY PARAMETER)
-    const checkScrollMarker = sessionStorage.getItem('triggerScrollToPastes');
-    if (checkScrollMarker === 'true' && !viewId) {
-        // Hapus marker langsung agar tidak nge-scroll terus-menerus saat page di-refresh manual
-        sessionStorage.removeItem('triggerScrollToPastes'); 
-        
-        setTimeout(() => {
-            const targetSeparator = document.querySelector('.title-separator');
-            if (targetSeparator) {
-                targetSeparator.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    async function loadPastesFromServer() {
+        try {
+            const response = await fetch(GITHUB_RAW_URL);
+            if (!response.ok) throw new Error(`HTTP status: ${response.status}`);
+            const fileContent = await response.text();
+            
+            let jsonString = fileContent.replace(/^(let|const|var|window)\s+\w+\s*=\s*/, '').trim();
+            if (jsonString.endsWith(';')) {
+                jsonString = jsonString.slice(0, -1);
             }
-        }, 300);
+            
+            pastes = JSON.parse(jsonString);
+            localStorage.setItem('arulzxd_pastes', JSON.stringify(pastes));
+        } catch (err) {
+            console.error("Gagal memuat GitHub Raw, beralih ke local storage...", err);
+            const rawLocal = localStorage.getItem('arulzxd_pastes');
+            try { 
+                pastes = rawLocal ? JSON.parse(rawLocal) : []; 
+            } catch(e) { 
+                pastes = []; 
+            }
+        }
+
+        if (!pastes || !Array.isArray(pastes)) {
+            pastes = [];
+        }
+
+        renderPage();
+        
+        const checkScrollMarker = sessionStorage.getItem('triggerScrollToPastes');
+        if (checkScrollMarker === 'true' && !viewId) {
+            sessionStorage.removeItem('triggerScrollToPastes'); 
+            
+            setTimeout(() => {
+                const targetSeparator = document.querySelector('.title-separator');
+                if (targetSeparator) {
+                    targetSeparator.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 300);
+        }
     }
-}
 
     function changeLanguage(lang) {
         currentLang = lang;
@@ -697,10 +674,9 @@ async function loadPastesFromServer() {
         if(document.getElementById('m-pastebin')) document.getElementById('m-pastebin').innerText = t.mPastebin;
         if(document.getElementById('m-bug')) document.getElementById('m-bug').innerText = t.mBug;
         if(document.getElementById('m-privacy')) document.getElementById('m-privacy').innerText = t.mPrivacy;
-        if(document.getElementById('m-terms')) document.getElementById('m-terms').innerText = t.mTerms;
+        if(document.getElementById('m-support')) document.getElementById('m-support').innerText = t.mTerms;
         if(document.getElementById('lbl-footer-text')) document.getElementById('lbl-footer-text').innerText = t.lblFooterText;
         
-        // Panggil kembali status menu aktif setelah translasi selesai dirender
         handleActiveMenuHighlight();
     }
 
@@ -779,7 +755,7 @@ async function loadPastesFromServer() {
         if (viewId) {
             const idx = pastes.findIndex(p => p.id === viewId);
             if (idx === -1) {
-                target.innerHTML = `<h2>Data tidak ditemukan!</h2><a href="https://arulz-pastecode.vercel.app/pastecode" class="btn-back">Kembali</a>`;
+                target.innerHTML = `<h2>Data tidak ditemukan!</h2><a href="/pastecode" class="btn-back">Kembali</a>`;
                 return;
             }
             
@@ -788,7 +764,7 @@ async function loadPastesFromServer() {
             const isHeavyCode = lineCount > 3000 || (current.content && current.content.length > 150000);
 
             target.innerHTML = `
-                <a href="https://arulz-pastecode.vercel.app/pastecode" class="btn-back">${t.btnBack}</a>
+                <a href="/pastecode" class="btn-back">${t.btnBack}</a>
                 <div class="detail-header">
                     <div class="detail-header-top">
                         <div style="flex-grow: 1; padding-right: 20px;">
@@ -904,7 +880,7 @@ async function loadPastesFromServer() {
         paginatedItems.forEach(p => {
             const contentPreview = p.content ? p.content.substring(0, 120) : '';
             htmlCards += `
-                <div class="paste-card" onclick="window.location.href='https://arulz-pastecode.vercel.app/pastecode?id=${p.id}'">
+                <div class="paste-card" onclick="window.location.href='/pastecode?id=${p.id}'">
                     <div class="card-top">
                         <div class="mac-dots"><div class="dot"></div><div class="dot y"></div><div class="dot g"></div></div>
                         <div class="lang-badge">${p.language}</div>
@@ -917,7 +893,7 @@ async function loadPastesFromServer() {
                         <div class="card-footer-info">
                             <span>📅 ${p.date}</span>
                         </div>
-                        <a href="https://arulz-pastecode.vercel.app/pastecode?id=${p.id}&raw=true" target="_blank" class="btn-raw" onclick="event.stopPropagation();">📄 RAW</a>
+                        <a href="/pastecode?id=${p.id}&raw=true" target="_blank" class="btn-raw" onclick="event.stopPropagation();">📄 RAW</a>
                     </div>
                 </div>
             `;
@@ -994,14 +970,14 @@ async function loadPastesFromServer() {
     }
 
     function copyRawUrl() {
-        const rawUrl = "https://arulz-pastecode.vercel.app/pastecode?id=" + viewId + "&raw=true";
+        const rawUrl = window.location.origin + "/pastecode?id=" + viewId + "&raw=true";
         navigator.clipboard.writeText(rawUrl).then(() => {
             customAlert(translations[currentLang].alertShare);
         });
     }
 
     function sharePaste() {
-        const shareUrl = "https://arulz-pastecode.vercel.app/pastecode?id=" + viewId;
+        const shareUrl = window.location.origin + "/pastecode?id=" + viewId;
         navigator.clipboard.writeText(shareUrl).then(() => {
             customAlert(translations[currentLang].alertShare);
         });
