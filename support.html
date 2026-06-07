@@ -279,18 +279,19 @@
 </div>
 
 <script>
-    // Fungsi pemanggil Custom Alert Box (Fix classList)
+    // Fungsi pemanggil Custom Alert Box (Fix ClassList)
     function showAlert(title, message) {
         document.getElementById('modal-title').innerText = title;
         document.getElementById('modal-message').innerText = message;
         document.getElementById('custom-modal').classList.add('active');
     }
 
+    // Fungsi penutup custom dialog box
     function closeModal() {
         document.getElementById('custom-modal').classList.remove('active');
     }
 
-    // Fungsi download QRIS anti-CORS dengan konversi otomatis ke Data URL / Base64
+    // Fungsi download QRIS otomatis anti-CORS lintas origin Vercel
     async function downloadQR() {
         const btn = document.getElementById('btn-download');
         const originalText = btn.innerText;
@@ -301,11 +302,12 @@
         const targetUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg";
 
         try {
+            // Mengambil data gambar dari server uploader
             const response = await fetch(targetUrl);
-            if (!response.ok) throw new Error("Gagal mengunduh gambar");
+            if (!response.ok) throw new Error("Network Response Blocked");
             const blob = await response.blob();
             
-            // Konversi file blob menjadi objek URL lokal browser
+            // Generate tautan unduhan lokal browser
             const blobUrl = URL.createObjectURL(blob);
             
             const element = document.createElement("a");
@@ -319,33 +321,23 @@
 
             showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan ke galeri kamu.");
         } catch (error) {
-            console.error(error);
+            console.error("Fetch gagal, mengalihkan ke mode download cadangan:", error);
             
-            // Fallback Plan: Menggunakan sistem pemrosesan canvas lokal untuk mengubah paksa gambar menjadi Base64 string
+            // Backup Plan: Jika Fetch murni dihadang CORS, gunakan metode tag anchor langsung
             try {
-                const img = document.getElementById('qris-img');
-                const canvas = document.createElement('canvas');
-                canvas.width = img.naturalWidth || img.width;
-                canvas.height = img.naturalHeight || img.height;
-                
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                
-                const base64Url = canvas.toDataURL("image/jpeg", 1.0);
-                
                 const element = document.createElement("a");
-                element.href = base64Url;
+                element.href = targetUrl;
+                element.target = "_blank";
                 element.download = "QRIS_Idzharul_Store.jpg";
                 document.body.appendChild(element);
                 element.click();
                 document.body.removeChild(element);
-
-                showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan lewat penampung lokal.");
-            } catch (canvasErr) {
-                console.error(canvasErr);
-                // Jika semua metode otomatis diblokir browser, buka di tab baru agar user bisa save-manual dengan mudah
+                
+                showAlert("Berhasil 🎉", "Mengunduh gambar QRIS langsung dari server penyedia.");
+            } catch (fallbackErr) {
+                // Jika masih terhambat pada secure internal browser browser ponsel, buka tab baru
                 window.open(targetUrl, '_blank');
-                showAlert("Simpan Manual 📥", "Gambar telah dibuka di tab baru. Silakan ketuk lama gambar lalu pilih 'Download Gambar'.");
+                showAlert("Simpan Manual 📥", "Gambar telah dibuka di halaman penuh. Silakan ketuk lama langsung pada gambar QRIS lalu pilih 'Download Gambar'.");
             }
         } finally {
             btn.innerText = originalText;
@@ -353,7 +345,7 @@
         }
     }
 
-    // Fungsi Share Link ke semua aplikasi (Mendukung WA, WA Business, IG, dll)
+    // Fungsi share ke semua aplikasi bawaan HP Android/iOS
     function shareLink() {
         const shareData = {
             title: 'Support — Arulz-XD API',
@@ -365,7 +357,7 @@
             navigator.share(shareData)
                 .catch((err) => console.log('Batal membagikan:', err));
         } else {
-            // Backup plan jika dibuka dari PC / browser desktop lama
+            // Cadangan apabila dibuka menggunakan web desktop / PC
             navigator.clipboard.writeText(window.location.href).then(() => {
                 showAlert("Disalin 🔗", "Link donasi berhasil disalin ke clipboard! Silakan share secara manual.");
             });
