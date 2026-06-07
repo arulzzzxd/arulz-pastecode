@@ -291,66 +291,43 @@
 
     // Fungsi download otomatis langsung memicu unduhan lokal biner tanpa buka tab baru
     async function downloadQR() {
-        const btn = document.getElementById('btn-download');
-        const originalText = btn.innerText;
+    const btn = document.getElementById('btn-download');
+    const originalText = btn.innerText;
+    
+    btn.innerText = "⏳ MENGUNDUH...";
+    btn.disabled = true;
+
+    const imageUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg";
+    // Menggunakan corsproxy publik untuk mem-bypass blokir browser
+    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(imageUrl);
+
+    try {
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error("Gagal mengambil gambar");
         
-        btn.innerText = "⏳ MENGUNDUH...";
-        btn.disabled = true;
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
 
-        const imageUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg";
+        const downloadLink = document.createElement("a");
+        downloadLink.href = blobUrl;
+        downloadLink.download = "QRIS_Idzharul_Store.jpg";
+        
+        // Append, klik, dan hapus dari DOM
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        
+        URL.revokeObjectURL(blobUrl);
 
-        try {
-            // bypass CORS menggunakan request biner langsung di browser
-            const response = await fetch(imageUrl, { mode: 'cors' });
-            if (!response.ok) throw new Error("CORS or Network Error");
-            
-            const blob = await response.blob();
-            const blobUrl = URL.createObjectURL(blob);
-
-            const downloadLink = document.createElement("a");
-            downloadLink.href = blobUrl;
-            downloadLink.download = "QRIS_Idzharul_Store.jpg";
-            document.body.appendChild(downloadLink);
-            
-            downloadLink.click();
-            
-            document.body.removeChild(downloadLink);
-            URL.revokeObjectURL(blobUrl);
-
-            showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan langsung ke galeri kamu.");
-        } catch (error) {
-            console.log("Mengalihkan ke sistem backup unduhan langsung...");
-            
-            // Sistem Backup Utama: Menggunakan trik trigger XMLHttpRequest biner lokal jika fetch murni dicegat
-            try {
-                const xhr = new XMLHttpRequest();
-                xhr.open("GET", imageUrl, true);
-                xhr.responseType = "blob";
-                xhr.onload = function () {
-                    const fileBlob = xhr.response;
-                    const fallbackUrl = URL.createObjectURL(fileBlob);
-                    const a = document.createElement("a");
-                    a.href = fallbackUrl;
-                    a.download = "QRIS_Idzharul_Store.jpg";
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(fallbackUrl);
-                    showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan.");
-                };
-                xhr.onerror = function () {
-                    // Jika benar-benar mentok karena limitasi ekstrem webview browser HP tertentu
-                    showAlert("Simpan QRIS 📥", "Gunakan ketuk lama pada gambar QRIS lalu pilih 'Download Gambar' atau 'Simpan ke Galeri'.");
-                };
-                xhr.send();
-            } catch (err) {
-                showAlert("Simpan QRIS 📥", "Gunakan ketuk lama pada gambar QRIS lalu pilih 'Download Gambar'.");
-            }
-        } finally {
-            btn.innerText = originalText;
-            btn.disabled = false;
-        }
+        showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan langsung ke galeri kamu.");
+    } catch (error) {
+        console.error("Download error:", error);
+        showAlert("Simpan QRIS 📥", "Gagal mengunduh otomatis. Gunakan ketuk lama pada gambar QRIS lalu pilih 'Simpan ke Galeri'.");
+    } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
     }
+}
 
     function shareLink() {
         const shareData = {
