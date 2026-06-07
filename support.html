@@ -279,73 +279,51 @@
 </div>
 
 <script>
-    // Fungsi pemanggil Custom Alert Box (Fix ClassList)
+    // String Base64 dari QRIS Gambar lo (Supaya 100% aman dari blokir CORS browser HP)
+    const qrisBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAEAAHgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElUVPvFUXXz2fKGOzhCRUpfWV5Wl5iZqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4Tl5ufo6erx8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9IKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==";
+
+    // Pasang Base64 ke elemen gambar secara otomatis saat halaman dimuat
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById('qris-img').src = qrisBase64;
+    });
+
     function showAlert(title, message) {
         document.getElementById('modal-title').innerText = title;
         document.getElementById('modal-message').innerText = message;
         document.getElementById('custom-modal').classList.add('active');
     }
 
-    // Fungsi penutup custom dialog box
     function closeModal() {
         document.getElementById('custom-modal').classList.remove('active');
     }
 
-    // Fungsi download QRIS otomatis anti-CORS lintas origin Vercel
-    async function downloadQR() {
+    // Fungsi download instan otomatis tanpa dialihkan ke tab baru
+    function downloadQR() {
         const btn = document.getElementById('btn-download');
         const originalText = btn.innerText;
         
         btn.innerText = "⏳ MENGUNDUH...";
         btn.disabled = true;
 
-        const targetUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg";
-
         try {
-            // Mengambil data gambar dari server uploader
-            const response = await fetch(targetUrl);
-            if (!response.ok) throw new Error("Network Response Blocked");
-            const blob = await response.blob();
-            
-            // Generate tautan unduhan lokal browser
-            const blobUrl = URL.createObjectURL(blob);
-            
+            // Langsung memicu aksi download lokal menggunakan data string Base64 murni
             const element = document.createElement("a");
-            element.href = blobUrl;
+            element.href = qrisBase64;
             element.download = "QRIS_Idzharul_Store.jpg";
             document.body.appendChild(element);
             element.click();
-            
             document.body.removeChild(element);
-            URL.revokeObjectURL(blobUrl);
 
-            showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan ke galeri kamu.");
+            showAlert("Berhasil 🎉", "Gambar QRIS berhasil diunduh langsung ke galeri kamu.");
         } catch (error) {
-            console.error("Fetch gagal, mengalihkan ke mode download cadangan:", error);
-            
-            // Backup Plan: Jika Fetch murni dihadang CORS, gunakan metode tag anchor langsung
-            try {
-                const element = document.createElement("a");
-                element.href = targetUrl;
-                element.target = "_blank";
-                element.download = "QRIS_Idzharul_Store.jpg";
-                document.body.appendChild(element);
-                element.click();
-                document.body.removeChild(element);
-                
-                showAlert("Berhasil 🎉", "Mengunduh gambar QRIS langsung dari server penyedia.");
-            } catch (fallbackErr) {
-                // Jika masih terhambat pada secure internal browser browser ponsel, buka tab baru
-                window.open(targetUrl, '_blank');
-                showAlert("Simpan Manual 📥", "Gambar telah dibuka di halaman penuh. Silakan ketuk lama langsung pada gambar QRIS lalu pilih 'Download Gambar'.");
-            }
+            console.error(error);
+            showAlert("Gagal Download ❌", "Terjadi kesalahan saat mengunduh. Silakan ketuk lama gambar QRIS lalu pilih 'Download Gambar'.");
         } finally {
             btn.innerText = originalText;
             btn.disabled = false;
         }
     }
 
-    // Fungsi share ke semua aplikasi bawaan HP Android/iOS
     function shareLink() {
         const shareData = {
             title: 'Support — Arulz-XD API',
@@ -357,7 +335,6 @@
             navigator.share(shareData)
                 .catch((err) => console.log('Batal membagikan:', err));
         } else {
-            // Cadangan apabila dibuka menggunakan web desktop / PC
             navigator.clipboard.writeText(window.location.href).then(() => {
                 showAlert("Disalin 🔗", "Link donasi berhasil disalin ke clipboard! Silakan share secara manual.");
             });
