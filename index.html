@@ -155,7 +155,8 @@
             display: block;
             transition: color 0.2s;
         }
-        .sidebar-menu-list li a:hover, .sidebar-menu-list li a.active { color: #ffffff; }
+        /* Highlight menu aktif dengan warna putih terang */
+        .sidebar-menu-list li a:hover, .sidebar-menu-list li a.active { color: #ffffff !important; font-weight: 900; }
         .sidebar-divider { height: 2px; background: #22252a; margin: 15px 0; }
 
         /* OVERLAY BACKGROUND */
@@ -519,7 +520,7 @@
         <li><a href="https://arulz-pastecode.vercel.app/home" id="m-home">HOME</a></li>
         <li><a href="https://simple-api-lagi.vercel.app/" target="_blank" id="m-docs">DOKUMENTASI</a></li>
         <li><a href="https://arulz-uploader.vercel.app/" target="_blank" id="m-upload">FILE UPLOADER</a></li>
-        <li><a href="https://arulz-pastecode.vercel.app/pastecode" class="active" id="m-pastebin">PASTEBIN</a></li>
+        <li><a href="https://arulz-pastecode.vercel.app/pastecode" id="m-pastebin" onclick="setScrollMarker()">PASTEBIN</a></li>
         
         <div class="sidebar-divider"></div>
         
@@ -562,7 +563,7 @@
 </div>
 
 <script>
-    const GITHUB_RAW_URL = "https://raw.githubusercontent.com/arulzzzxd/arulz-pastecode/main/data.js";
+    const GITHUB_RAW_URL = "https://raw.githubusercontent.com/arulzzzxd/Arul-pastecode/main/data.js";
 
     const translations = {
         id: {
@@ -600,6 +601,25 @@
     const isRawMode = urlParams.get('raw') === 'true'; 
     let currentFilter = 'ALL';
 
+    // FUNGSI MANAJEMEN MENU AKTIF BERDASARKAN URL SEKARANG
+    function handleActiveMenuHighlight() {
+        const currentUrl = window.location.href;
+        
+        // Hapus kelas active dari semua elemen menu terlebih dahulu
+        document.querySelectorAll('.sidebar-menu-list li a').forEach(el => {
+            el.classList.remove('active');
+        });
+
+        // Seleksi elemen spesifik berdasarkan kecocokan URL halaman
+        if (currentUrl.includes('/home')) {
+            document.getElementById('m-home').classList.add('active');
+        } else if (currentUrl.includes('/support')) {
+            document.getElementById('m-terms').classList.add('active');
+        } else if (currentUrl.includes('/pastecode')) {
+            document.getElementById('m-pastebin').classList.add('active');
+        }
+    }
+
     function customAlert(message) {
         document.getElementById('alertModalMessage').innerText = message;
         document.getElementById('alertModal').style.display = 'flex';
@@ -609,34 +629,54 @@
         document.getElementById('alertModal').style.display = 'none';
     }
     
-    async function loadPastesFromServer() {
-        try {
-            const response = await fetch(GITHUB_RAW_URL);
-            if (!response.ok) throw new Error(`HTTP status: ${response.status}`);
-            const fileContent = await response.text();
-            
-            let jsonString = fileContent.replace(/^(let|const|var|window)\s+\w+\s*=\s*/, '').trim();
-            if (jsonString.endsWith(';')) {
-                jsonString = jsonString.slice(0, -1);
-            }
-            
-            pastes = JSON.parse(jsonString);
-            localStorage.setItem('arulzxd_pastes', JSON.stringify(pastes));
-        } catch (err) {
-            console.error("Gagal memuat GitHub Raw, beralih ke local storage...", err);
-            const rawLocal = localStorage.getItem('arulzxd_pastes');
-            try { 
-                pastes = rawLocal ? JSON.parse(rawLocal) : []; 
-            } catch(e) { 
-                pastes = []; 
-            }
-        }
+    // Fungsi untuk menandai bahwa user mengklik menu PASTEBIN dari sidebar
+function setScrollMarker() {
+    sessionStorage.setItem('triggerScrollToPastes', 'true');
+}
 
-        if (!pastes || !Array.isArray(pastes)) {
-            pastes = [];
+async function loadPastesFromServer() {
+    try {
+        const response = await fetch(GITHUB_RAW_URL);
+        if (!response.ok) throw new Error(`HTTP status: ${response.status}`);
+        const fileContent = await response.text();
+        
+        let jsonString = fileContent.replace(/^(let|const|var|window)\s+\w+\s*=\s*/, '').trim();
+        if (jsonString.endsWith(';')) {
+            jsonString = jsonString.slice(0, -1);
         }
+        
+        pastes = JSON.parse(jsonString);
+        localStorage.setItem('arulzxd_pastes', JSON.stringify(pastes));
+    } catch (err) {
+        console.error("Gagal memuat GitHub Raw, beralih ke local storage...", err);
+        const rawLocal = localStorage.getItem('arulzxd_pastes');
+        try { 
+            pastes = rawLocal ? JSON.parse(rawLocal) : []; 
+        } catch(e) { 
+            pastes = []; 
+        }
+    }
 
-        renderPage();
+    if (!pastes || !Array.isArray(pastes)) {
+        pastes = [];
+    }
+
+    renderPage();
+    
+    // LOGIKA AUTO-SCROLL MENGGUNAKAN SESSION STORAGE (TANPA QUERY PARAMETER)
+    const checkScrollMarker = sessionStorage.getItem('triggerScrollToPastes');
+    if (checkScrollMarker === 'true' && !viewId) {
+        // Hapus marker langsung agar tidak nge-scroll terus-menerus saat page di-refresh manual
+        sessionStorage.removeItem('triggerScrollToPastes'); 
+        
+        setTimeout(() => {
+            const targetSeparator = document.querySelector('.title-separator');
+            if (targetSeparator) {
+                targetSeparator.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 300);
+    }
+}
     }
 
     function changeLanguage(lang) {
@@ -660,6 +700,9 @@
         if(document.getElementById('m-privacy')) document.getElementById('m-privacy').innerText = t.mPrivacy;
         if(document.getElementById('m-terms')) document.getElementById('m-terms').innerText = t.mTerms;
         if(document.getElementById('lbl-footer-text')) document.getElementById('lbl-footer-text').innerText = t.lblFooterText;
+        
+        // Panggil kembali status menu aktif setelah translasi selesai dirender
+        handleActiveMenuHighlight();
     }
 
     function toggleSidebar() {
