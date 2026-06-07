@@ -244,7 +244,7 @@
         <p class="desc">API & Pastebin ini gw bikin di sela-sela waktu luang. Kalau ngerasa kebantu, support seikhlasnya bantu banget buat biaya perpanjangan hosting server + nambahin fitur & snippet baru.</p>
         
         <div class="qr-wrapper">
-            <img id="qris-img" src="" alt="QRIS Arulz-XD">
+            <img id="qris-img" src="https://arulz-uploader.vercel.app/files/CVmlrD.jpg" alt="QRIS Arulz-XD">
         </div>
 
         <div class="payment-info-box">
@@ -279,13 +279,6 @@
 </div>
 
 <script>
-    // String Base64 murni dari aset QRIS lo
-    const qrisBase64 = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAMCAgICAgMCAgIDAwMDBAYEBAQEBAgGBgUGCQgKCgkICQkKDA8MCgsOCwkJDRENDg8QEBEQCgwSExIQEw8QEBD/2wBDAQMDAwQDBAgEBAgQCwkLEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBD/wAARCAEAAHgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKKomRefECEQXY3RUpfWV5Wl5iZqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4Tl5ufo6erx8vP09fb3+Pn6/9oAMBAAIRAxEAPwD9IKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/2Q==";
-
-    document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById('qris-img').src = qrisBase64;
-    });
-
     function showAlert(title, message) {
         document.getElementById('modal-title').innerText = title;
         document.getElementById('modal-message').innerText = message;
@@ -296,36 +289,22 @@
         document.getElementById('custom-modal').classList.remove('active');
     }
 
-    // Fungsi konverter Base64 ke struktur file biner murni (Blob)
-    function base64ToBlob(base64Data, contentType) {
-        contentType = contentType || '';
-        const sliceSize = 1024;
-        const byteCharacters = atob(base64Data.split(',')[1]);
-        const byteArrays = [];
-
-        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-            const slice = byteCharacters.slice(offset, offset + sliceSize);
-            const byteNumbers = new Array(slice.length);
-            for (let i = 0; i < slice.length; i++) {
-                byteNumbers[i] = slice.charCodeAt(i);
-            }
-            const byteArray = new Uint8Array(byteNumbers);
-            byteArrays.push(byteArray);
-        }
-        return new Blob(byteArrays, {type: contentType});
-    }
-
-    // Fungsi download otomatis langsung lewat konversi Blob internal browser
-    function downloadQR() {
+    // Fungsi download otomatis langsung memicu unduhan lokal biner tanpa buka tab baru
+    async function downloadQR() {
         const btn = document.getElementById('btn-download');
         const originalText = btn.innerText;
         
         btn.innerText = "⏳ MENGUNDUH...";
         btn.disabled = true;
 
+        const imageUrl = "https://arulz-uploader.vercel.app/files/CVmlrD.jpg";
+
         try {
-            // Konversi string base64 menjadi file biner lokal browser
-            const blob = base64ToBlob(qrisBase64, 'image/jpeg');
+            // bypass CORS menggunakan request biner langsung di browser
+            const response = await fetch(imageUrl, { mode: 'cors' });
+            if (!response.ok) throw new Error("CORS or Network Error");
+            
+            const blob = await response.blob();
             const blobUrl = URL.createObjectURL(blob);
 
             const downloadLink = document.createElement("a");
@@ -333,17 +312,40 @@
             downloadLink.download = "QRIS_Idzharul_Store.jpg";
             document.body.appendChild(downloadLink);
             
-            // Eksekusi download instan tanpa melanggar hak navigasi top frame browser
             downloadLink.click();
             
-            // Bersihkan sisa memori objek URL setelah diproses
             document.body.removeChild(downloadLink);
             URL.revokeObjectURL(blobUrl);
 
             showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan langsung ke galeri kamu.");
         } catch (error) {
-            console.error("Gagal memproses download blob lokal:", error);
-            showAlert("Gagal Download ❌", "Terjadi batasan keamanan internal browser.");
+            console.log("Mengalihkan ke sistem backup unduhan langsung...");
+            
+            // Sistem Backup Utama: Menggunakan trik trigger XMLHttpRequest biner lokal jika fetch murni dicegat
+            try {
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", imageUrl, true);
+                xhr.responseType = "blob";
+                xhr.onload = function () {
+                    const fileBlob = xhr.response;
+                    const fallbackUrl = URL.createObjectURL(fileBlob);
+                    const a = document.createElement("a");
+                    a.href = fallbackUrl;
+                    a.download = "QRIS_Idzharul_Store.jpg";
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(fallbackUrl);
+                    showAlert("Berhasil 🎉", "Gambar QRIS berhasil disimpan.");
+                };
+                xhr.onerror = function () {
+                    // Jika benar-benar mentok karena limitasi ekstrem webview browser HP tertentu
+                    showAlert("Simpan QRIS 📥", "Gunakan ketuk lama pada gambar QRIS lalu pilih 'Download Gambar' atau 'Simpan ke Galeri'.");
+                };
+                xhr.send();
+            } catch (err) {
+                showAlert("Simpan QRIS 📥", "Gunakan ketuk lama pada gambar QRIS lalu pilih 'Download Gambar'.");
+            }
         } finally {
             btn.innerText = originalText;
             btn.disabled = false;
