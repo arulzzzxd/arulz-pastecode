@@ -2,11 +2,10 @@
   "version": 2,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/pastecode", "destination": "/index.html" },
-    { "source": "/support", "destination": "/support.html" },
-    { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/home", "destination": "/index.html" },
-    { "source": "/", "destination": "/index.html" }
+    { "source": "/pastecode", "destination": "/" },
+    { "source": "/support", "destination": "/support" },
+    { "source": "/privacy", "destination": "/privacy" },
+    { "source": "/home", "destination": "/" }
   ],
   "headers": [
     {
