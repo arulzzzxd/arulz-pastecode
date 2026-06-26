@@ -471,7 +471,7 @@
 <body>
 
 <div class="navbar">
-    <a href="/home" class="logo"><span>AD</span> Arulz-XD API</a>
+    <a href="/" class="logo"><span>AD</span> Arulz-XD API</a>
     <div class="nav-right">
         <a href="https://simple-api-lagi.vercel.app/" target="_blank" class="nav-btn-docs" id="nav-docs-text">📖 DOCS</a>
         <button class="hamburger-btn" onclick="toggleSidebar()">
@@ -561,7 +561,7 @@
             stat1: "Total Pastes", stat2: "Languages", stat4: "Total Lines",
             searchPlaceholder: "Search paste by title, language, or description...", filterAll: "All", sepText: "All Pastes", noData: "Data not found.",
             lblFooterText: "Created for Indonesian Developers", alertSuccessCopy: "Code successfully copied!", 
-            btnBack: "← BACK TO PASTEBIN", lblLines: "lines", btnCopy: "🗎 COPY CODE", 
+            btnBack: "← BACK TO PASTEBIN", lblLines: "lines", btnCopy: " COPY CODE", 
             btnRaw: "📄 RAW", btnShare: "🗀 SHARE", alertShare: "Link copied to clipboard!", btnDownload: "📥 DOWNLOAD",
             btnPrev: "← Previous", btnNext: "Next →"
         }
@@ -580,20 +580,18 @@
 
     function handleActiveMenuHighlight() {
         const currentUrl = window.location.pathname;
+        const hasId = urlParams.has('id');
         
         document.querySelectorAll('.sidebar-menu-list li a').forEach(el => {
             el.classList.remove('active');
         });
 
-        if (currentUrl === '/home' || currentUrl === '/' || currentUrl.includes('index.html')) {
-            const homeMenu = document.getElementById('m-home');
-            if(homeMenu) homeMenu.classList.add('active');
+        if (hasId || currentUrl === '/' || currentUrl.includes('index.html')) {
+            const pasteMenu = document.getElementById('m-pastebin');
+            if(pasteMenu) pasteMenu.classList.add('active');
         } else if (currentUrl.includes('/support')) {
             const supportMenu = document.getElementById('m-support');
             if(supportMenu) supportMenu.classList.add('active');
-        } else if (currentUrl.includes('/pastecode')) {
-            const pasteMenu = document.getElementById('m-pastebin');
-            if(pasteMenu) pasteMenu.classList.add('active');
         } else if (currentUrl.includes('/privacy')) {
             const privacyMenu = document.getElementById('m-privacy');
             if(privacyMenu) privacyMenu.classList.add('active');
@@ -755,7 +753,7 @@
         if (viewId) {
             const idx = pastes.findIndex(p => p.id === viewId);
             if (idx === -1) {
-                target.innerHTML = `<h2>Data tidak ditemukan!</h2><a href="/pastecode" class="btn-back">Kembali</a>`;
+                target.innerHTML = `<h2>Data tidak ditemukan!</h2><a href="/" class="btn-back">Kembali</a>`;
                 return;
             }
             
@@ -764,7 +762,7 @@
             const isHeavyCode = lineCount > 3000 || (current.content && current.content.length > 150000);
 
             target.innerHTML = `
-                <a href="/pastecode" class="btn-back">${t.btnBack}</a>
+                <a href="/" class="btn-back">${t.btnBack}</a>
                 <div class="detail-header">
                     <div class="detail-header-top">
                         <div style="flex-grow: 1; padding-right: 20px;">
@@ -880,7 +878,7 @@
         paginatedItems.forEach(p => {
             const contentPreview = p.content ? p.content.substring(0, 120) : '';
             htmlCards += `
-                <div class="paste-card" onclick="window.location.href='/pastecode?id=${p.id}'">
+                <div class="paste-card" onclick="window.location.href='/?id=${p.id}'">
                     <div class="card-top">
                         <div class="mac-dots"><div class="dot"></div><div class="dot y"></div><div class="dot g"></div></div>
                         <div class="lang-badge">${p.language}</div>
@@ -893,7 +891,7 @@
                         <div class="card-footer-info">
                             <span>📅 ${p.date}</span>
                         </div>
-                        <a href="/pastecode?id=${p.id}&raw=true" target="_blank" class="btn-raw" onclick="event.stopPropagation();">📄 RAW</a>
+                        <a href="/?id=${p.id}&raw=true" target="_blank" class="btn-raw" onclick="event.stopPropagation();">📄 RAW</a>
                     </div>
                 </div>
             `;
@@ -970,14 +968,14 @@
     }
 
     function copyRawUrl() {
-        const rawUrl = window.location.origin + "/pastecode?id=" + viewId + "&raw=true";
+        const rawUrl = window.location.origin + "/?id=" + viewId + "&raw=true";
         navigator.clipboard.writeText(rawUrl).then(() => {
             customAlert(translations[currentLang].alertShare);
         });
     }
 
     function sharePaste() {
-        const shareUrl = window.location.origin + "/pastecode?id=" + viewId;
+        const shareUrl = window.location.origin + "/?id=" + viewId;
         navigator.clipboard.writeText(shareUrl).then(() => {
             customAlert(translations[currentLang].alertShare);
         });
