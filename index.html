@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arulz-XD API - Pastebin</title>
+    <title>Arulz-XD API - Pastecode</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
     <style>
@@ -974,16 +974,29 @@
     }
 
     function sharePaste() {
-        // Ambil viewId langsung dari URL untuk memastikan presisi data
         const currentViewId = new URLSearchParams(window.location.search).get('id');
         if (!currentViewId) return;
 
         const idx = pastes.findIndex(p => p.id.toString() === currentViewId.toString());
         if (idx !== -1) {
+            const current = pastes[idx];
             const shareUrl = window.location.origin + "/pastecode?id=" + currentViewId;
-            navigator.clipboard.writeText(shareUrl).then(() => {
-                customAlert(translations[currentLang].alertShare);
-            });
+            
+            // Cek apakah browser mendukung Web Share API (Sistem Share HP)
+            if (navigator.share) {
+                navigator.share({
+                    title: current.title,
+                    text: current.desc || `Lihat kode ${current.title} di Arulz-XD Pastebin!`,
+                    url: shareUrl
+                })
+                .then(() => console.log('Berhasil membagikan!'))
+                .catch((error) => console.log('Batal membagikan:', error));
+            } else {
+                // Fallback jika dibuka di PC / Browser yang tidak mendukung Share API
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    customAlert(translations[currentLang].alertShare);
+                });
+            }
         } else {
             customAlert("Gagal membagikan: Data tidak ditemukan.");
         }
