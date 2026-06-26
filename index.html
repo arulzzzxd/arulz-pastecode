@@ -736,28 +736,27 @@
             return;
         }
 
-        // KODE BARU (Sudah Diperbaiki)
 if (viewId && isRawMode) {
-    // Mengubah p.id menjadi String agar cocok dengan viewId dari URL
-    const current = pastes.find(p => p.id.toString() === viewId.toString());
-    if (!current) { document.body.innerHTML = "Data tidak ditemukan."; return; }
-    document.body.classList.add('raw-mode-active');
-
-    const containerPre = document.createElement('pre');
-    containerPre.style.cssText = "margin: 0; white-space: pre-wrap; font-family: monospace; font-size: 14px; word-wrap: break-word;";
-    containerPre.textContent = current.content;
-    document.body.innerHTML = '';
-    document.body.appendChild(containerPre);
-    return;
-}
-
-if (viewId) {
-    // Mengubah p.id menjadi String agar pencarian indeks bernilai true
-    const idx = pastes.findIndex(p => p.id === viewId);
-    if (idx === -1) {
-    target.innerHTML = `<h2>Data tidak ditemukan!</h2><a href="/pastecode" class="btn-back">Kembali</a>`;
-    return;
-}
+            // Perbaikan pencarian ID Mode Raw dengan .toString()
+            const current = pastes.find(p => p.id.toString() === viewId.toString());
+            if (!current) { document.body.innerHTML = "Data tidak ditemukan."; return; }
+            document.body.classList.add('raw-mode-active');
+            
+            const containerPre = document.createElement('pre');
+            containerPre.style.cssText = "margin: 0; white-space: pre-wrap; font-family: monospace; font-size: 14px; word-wrap: break-word;";
+            containerPre.textContent = current.content;
+            document.body.innerHTML = '';
+            document.body.appendChild(containerPre);
+            return;
+        }
+            
+        if (viewId) {
+            // Perbaikan pencarian Indeks Halaman Detail dengan .toString()
+            const idx = pastes.findIndex(p => p.id.toString() === viewId.toString());
+            if (idx === -1) {
+                target.innerHTML = `<h2>Data tidak ditemukan!</h2><a href="/pastecode" class="btn-back">Kembali</a>`;
+                return;
+            }
 
             const current = pastes[idx];
             const lineCount = current.content ? current.content.split('\n').length : 0;
