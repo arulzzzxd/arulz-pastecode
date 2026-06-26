@@ -1,10 +1,10 @@
 const data = [
     {
-    "id": 1780765874079,
-    "title": "Contoh2",
+    "id": 1782472574470,
+    "title": "Contoh3",
     "language": "javascript",
     "desc": "By arulzxd",
-    "date": "7 Jun 2026",
+    "date": "26 Jun 2026",
     "content": "Contoh3"
 }
 ];
